@@ -192,7 +192,7 @@
   </div>
 
   <audio id="bgMusic" loop>
-    <source src="mp3/My Love Mine All Mine.mp3" type="audio/mpeg">
+    <source src="mp3/love-mine.mp3" type="audio/mpeg">
     Tu navegador no soporta audio HTML5.
   </audio>
 
@@ -228,7 +228,9 @@
     function startExperience() {
       document.getElementById('startOverlay').style.display = 'none';
       document.getElementById('mainMenu').classList.add('active');
-      document.getElementById('bgMusic').play();
+      const audio = document.getElementById('bgMusic');
+      audio.volume = 0.8;
+      audio.play().catch(e => console.log('Audio autoplay error:', e));
     }
 
     const phrases = {
@@ -329,4 +331,3 @@
   </script>
 </body>
 </html>
-
