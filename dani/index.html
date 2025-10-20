@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Posists para Dana</title>
+  <link rel="icon" type="image/png" href="img/image-removebg-preview (2).png" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #b2f7b8, #5bbd5b);
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1rem;
+      overflow-x: hidden;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .overlay img {
+      width: 100px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .overlay img:hover {
+      transform: scale(1.1);
+    }
+
+    .overlay p {
+      font-size: 1.2rem;
+      color: #2e7d32;
+      margin-bottom: 1rem;
+    }
+
+    .flower-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .flower {
+      position: absolute;
+      font-size: 1.5rem;
+      animation: fall linear infinite;
+      opacity: 0.8;
+    }
+
+    @keyframes fall {
+      0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    }
+
+    .container, .sub-container {
+      background: #fff;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      max-width: 700px;
+      width: 100%;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+      display: none;
+      flex-direction: column;
+    }
+
+    .container.active, .sub-container.active {
+      display: flex;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2e7d32;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .section, .sub-section {
+      margin-bottom: 1rem;
+      border: 1px solid #c8e6c9;
+      border-radius: 1rem;
+      padding: 1rem;
+      background-color: #f1f8e9;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .section:hover, .sub-section:hover {
+      transform: scale(1.02);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .sub-section h3 {
+      color: #388e3c;
+      margin: 0;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .modal-note {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #fff;
+      border: 3px solid #cddc39;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      z-index: 2000;
+      width: 80%;
+      max-width: 500px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .modal-note p {
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    .modal-note .close {
+      position: absolute;
+      top: 0.5rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #888;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -40%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-style: italic;
+      color: #444;
+    }
+
+    .back {
+      background-color: #dcedc8;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      color: #2e7d32;
+      font-weight: bold;
+      margin-top: 1rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay" id="startOverlay">
+    <p>Hey, preciosa. Da click en el dinosaurio 💚</p>
+    <img src="img/image-removebg-preview (2).png" onclick="startExperience()">
+  </div>
+
+  <audio id="bgMusic" loop>
+    <source src="mp3/My Love Mine All Mine.mp3" type="audio/mpeg">
+    Tu navegador no soporta audio HTML5.
+  </audio>
+
+  <div class="flower-bg" id="flowerContainer"></div>
+
+  <div class="container" id="mainMenu">
+    <h1>Para cuando estés (y yo no deba estar)</h1>
+    <div class="section" onclick="openFolder('agobiada')"><h2>🌀 Cuando te sientas agobiada...</h2></div>
+    <div class="section" onclick="openFolder('triste')"><h2>🌧️ Cuando estés triste...</h2></div>
+    <div class="section" onclick="openFolder('enojada')"><h2>🔥 Cuando estés enojada...</h2></div>
+    <div class="section" onclick="openFolder('feliz')"><h2>☀️ Cuando estés feliz...</h2></div>
+    <div class="section" onclick="openFolder('dudas')"><h2>🧭 Cuando dudes...</h2></div>
+    <div class="section" onclick="openFolder('cupones')"><h2>🎟️ Cupones especiales</h2></div>
+    <div class="footer">
+      Con amor, desde mi cansancio,<br>
+      desde mi optimismo tonto y terco...<br>
+      <strong>Giu</strong>
+    </div>
+  </div>
+
+  <div class="sub-container" id="subMenu">
+    <h1 id="subTitle"></h1>
+    <div id="subSections"></div>
+    <button class="back" onclick="backToMain()">⬅ Volver al menú principal</button>
+  </div>
+
+  <div id="modalNote" class="modal-note" style="display:none;">
+    <button class="close" onclick="closeNote()">&times;</button>
+    <p id="noteText"></p>
+  </div>
+
+  <script>
+    function startExperience() {
+      document.getElementById('startOverlay').style.display = 'none';
+      document.getElementById('mainMenu').classList.add('active');
+      document.getElementById('bgMusic').play();
+    }
+
+    const phrases = {
+      agobiada: [
+        "Respirá. No todo tiene que resolverse hoy.",
+        "Si hoy solo podés con poco, está bien.",
+        "Tu esfuerzo silencioso también vale.",
+        "Te admiro por seguir incluso cuando estás cansada.",
+        "Estoy acá, creyendo en vos incluso cuando vos no podés."
+      ],
+      triste: [
+        "No hace falta que sonrías, podés ser real.",
+        "Tu tristeza no te hace menos hermosa.",
+        "Yo te abrazo incluso si no estás bien.",
+        "Podés sentirte mal y aún así ser increíble.",
+        "Estoy para vos incluso cuando vos no querés hablar."
+      ],
+      enojada: [
+        "Tu enojo también merece espacio.",
+        "No tenés que ser perfecta para que te quiera.",
+        "Podés explotar, y yo sigo acá.",
+        "Tu intensidad no me asusta.",
+        "El fuego también es parte de tu luz."
+      ],
+      feliz: [
+        "¡Celebralo! Tu alegría me contagia.",
+        "Brillá sin miedo, yo bailo con vos.",
+        "Sos magia cuando reís.",
+        "Tu felicidad me alegra la existencia.",
+        "Tenés derecho a estar bien sin culpa."
+      ],
+      dudas: [
+        "Yo te elijo incluso cuando vos dudás.",
+        "No estás sola. Nunca lo estuviste.",
+        "Lo que construimos vale la pena.",
+        "El amor también es confuso y eso está bien.",
+        "Podés dudar, pero yo estoy segura de vos."
+      ],
+      cupones: [
+        "🎫 Vale por una videollamada sorpresa llena de mimos verbales.",
+        "🎫 Vale por una carta escrita con el corazón.",
+        "🎫 Vale por un “te amo” sin motivo.",
+        "🎫 Vale por un día en que solo vos importás.",
+        "🎫 Vale por una lista de canciones para sanar o sonreír."
+      ]
+    };
+
+    const flowerIcons = ['🌸', '💐', '🌺', '🌼', '🌻'];
+
+    function openFolder(type) {
+      document.getElementById('mainMenu').classList.remove('active');
+      document.getElementById('subMenu').classList.add('active');
+      document.getElementById('subTitle').innerText = type === 'cupones' ? '🎟️ Cupones especiales' : '📂 ' + document.querySelector(`[onclick*="${type}"]`).innerText;
+
+      const container = document.getElementById('subSections');
+      container.innerHTML = '';
+
+      phrases[type].forEach((phrase, index) => {
+        const sec = document.createElement('div');
+        sec.className = 'sub-section';
+
+        const title = document.createElement('h3');
+        const icon = flowerIcons[index % flowerIcons.length];
+        title.innerText = `${icon} ${index + 1}`;
+
+        sec.appendChild(title);
+        sec.onclick = () => openNote(phrase);
+
+        container.appendChild(sec);
+      });
+    }
+
+    function openNote(text) {
+      document.getElementById('noteText').innerText = text;
+      document.getElementById('modalNote').style.display = 'block';
+    }
+
+    function closeNote() {
+      document.getElementById('modalNote').style.display = 'none';
+    }
+
+    function backToMain() {
+      document.getElementById('subMenu').classList.remove('active');
+      document.getElementById('mainMenu').classList.add('active');
+    }
+
+    const emojis = ['🌸','💐','🌹','🌷','🥀','🪻','🪷','🌺','🌼','🌻','🏵️','💮'];
+    const container = document.getElementById('flowerContainer');
+    for (let i = 0; i < 100; i++) {
+      const flower = document.createElement('div');
+      flower.classList.add('flower');
+      flower.style.left = Math.random() * 100 + '%';
+      flower.style.animationDuration = (6 + Math.random() * 5) + 's';
+      flower.style.animationDelay = Math.random() * 5 + 's';
+      flower.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+      container.appendChild(flower);
+    }
+  </script>
+</body>
+</html>
